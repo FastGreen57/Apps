@@ -90,6 +90,16 @@ ol.line::before{content:"";position:absolute;left:38px;top:0;bottom:0;width:2px;
 .spec dd small{display:block;color:var(--muted);font-size:11px}
 @media (max-width:520px){.specs{grid-template-columns:repeat(2,minmax(0,1fr))}.spec:nth-child(3){border-left:0;padding-left:0}.spec:nth-child(n+3){border-top:1px solid var(--line)}}
 .desc{margin:0;max-width:62ch}
+.val{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.val .lbl{font:500 10.5px var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.val .amt{font:500 22px var(--f-data);font-variant-numeric:tabular-nums;color:var(--ink)}
+.val .kind{font:500 10.5px var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:3px;border:1px solid var(--line);color:var(--muted)}
+.val .src{flex-basis:100%;font-size:12.5px;color:var(--muted)}
+.val .src a{color:var(--muted)}
+.val.none .amt{font-size:15px;color:var(--muted)}
+.rank{font:600 12px var(--f-data);color:var(--rosso);margin-right:2px}
+.sortg{display:flex;gap:6px;align-items:center}
+.sortg .lab{font:500 11px var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .more{font-size:13px;color:var(--muted)}
 .more a{color:var(--rosso);text-decoration:none;font-weight:600}
 .more a:hover{text-decoration:underline}
@@ -125,6 +135,10 @@ footer p{max-width:72ch;margin:0 0 8px}
     <button class="chip" data-f="F12" aria-pressed="false">Flat-12</button>
     <button class="chip" data-f="hyb" aria-pressed="false">Hybrid / EV</button>
   </div>
+  <div class="sortg" role="group" aria-label="Order"><span class="lab">Order</span>
+    <button class="chip srt" data-s="time" aria-pressed="true">Timeline</button>
+    <button class="chip srt" data-s="value" aria-pressed="false">Most valuable</button>
+  </div>
   <nav class="decades" id="decades" aria-label="Jump to decade"></nav>
 </div></div>
 
@@ -132,6 +146,7 @@ footer p{max-width:72ch;margin:0 0 8px}
 
 <footer><div class="wrap">
   <p>Figures are manufacturer claims or widely cited period numbers and are rounded; production counts include closely related variants (Spider/GTS versions are folded into their coupé). Photos are the lead image from each model's Wikipedia article, mostly from Wikimedia Commons; tap a photo's credit for the photographer and licence. The 365 GT4 BB shows a side-profile illustration because no photo of that exact model was available.</p>
+  <p>Values come from the CLASSIC.COM market benchmark where available, otherwise the most recent public sale, an auction estimate, or the new-car price, as labelled on each card. They are refreshed monthly and are guides, not appraisals.</p>
   <p id="pwa-note"></p>
 </div></footer>
 
@@ -314,32 +329,56 @@ function entryHTML(e){
   const q2=encodeURIComponent("Ferrari "+name.replace(/'/g,"").replace(/\//g," "));
   return `<li class="entry"><div class="yr"><span>${y}</span></div>
   <article class="card"><div class="stage">${car(body,col,fl)}${P[name]?`<img src="${P[name].f||P[name].u}" referrerpolicy="no-referrer" alt="Ferrari ${esc(name)}" loading="lazy" decoding="async"><a class="credit" href="${P[name].file}" target="_blank" rel="noopener">Photo: Wikimedia ↗</a>`:""}</div>
-  <div class="body"><div class="title"><h3>Ferrari ${esc(name)}</h3>${tags}</div>
+  <div class="body"><div class="title"><h3>${RANK[name]?`<span class="rank">#${RANK[name]}</span>`:""}Ferrari ${esc(name)}</h3>${tags}</div>
   <dl class="specs"><div class="spec"><dt>Engine</dt><dd>${esc(eng)}</dd></div><div class="spec"><dt>Power</dt><dd>${fmt(hp)} hp</dd></div><div class="spec"><dt>Top speed</dt><dd>${top}</dd></div><div class="spec"><dt>Built</dt><dd>${built?fmt(built):"In series"}${built?"":"<small>no fixed run</small>"}</dd></div></dl>
+  ${valHTML(name)}
   <p class="desc">${esc(desc)}</p>
   <div class="more"><a href="https://www.google.com/search?tbm=isch&q=${q2}" target="_blank" rel="noopener">Photos ↗</a> · <a href="https://en.wikipedia.org/wiki/Special:Search?search=${q2}" target="_blank" rel="noopener">History ↗</a></div>
   </div></article></li>`;
 }
 
+// ----- Values (values.json, refreshed monthly) -----
+let VAL={},ASOF=null,RANK={},sortBy="time";
+const KIND={market:"Market value",sale:"Last sale",est:"Estimate",new:"New price"};
+const money=n=>n>=1e6?"$"+(n/1e6).toFixed(n>=1e7?1:2).replace(/\.?0+$/,"")+"M":"$"+Math.round(n/1e3)+"K";
+const asofTxt=()=>ASOF?new Date(ASOF+"T12:00:00").toLocaleDateString("en-US",{month:"short",year:"numeric"}):"";
+function valHTML(name){
+  const v=VAL[name]; if(!v)return "";
+  if(v.v==null)return `<div class="val none"><span class="lbl">Value</span><span class="amt">${esc(v.label||"Not publicly traded")}</span><span class="src">${esc(v.note||"")}</span></div>`;
+  const rng=v.lo!=null&&v.lo!==v.hi?` · range ${money(v.lo)}–${money(v.hi)}`:"";
+  const src=v.url?`<a href="${v.url}" target="_blank" rel="noopener">${esc(v.src)} ↗</a>`:esc(v.src);
+  return `<div class="val"><span class="lbl">Value</span><span class="amt">${money(v.v)}</span><span class="kind">${KIND[v.kind]||""}</span><span class="src">${src}, ${asofTxt()}${rng}${v.note?". "+esc(v.note):""}</span></div>`;
+}
 let render=function(){
   const term=q.value.trim().toLowerCase();
   const list=D.filter(e=>(filt==="all"||kind(e)[filt])&&(!term||(`${e[0]} ${e[1]} ${e[2]} ${e[8]}`).toLowerCase().includes(term)));
+  RANK={};
+  if(sortBy==="value"){
+    const vv=e=>VAL[e[1]]&&VAL[e[1]].v!=null?VAL[e[1]].v:-1;
+    const sorted=list.slice().sort((a,b)=>vv(b)-vv(a));
+    sorted.forEach((e,i)=>{if(vv(e)>=0)RANK[e[1]]=i+1});
+    tl.innerHTML=sorted.length?`<section class="decade" id="dval"><div class="dhead"><h2>By value</h2><p>Most valuable first${ASOF?", values as of "+asofTxt():""}. Cars with no public sales are listed last.</p></div><ol class="line">${sorted.map(entryHTML).join("")}</ol></section>`:`<p class="empty">No Ferrari matches that search.</p>`;
+    decNav.innerHTML=`<span class="count">${list.length} of ${D.length} models</span>`;
+    return;
+  }
   const by={};list.forEach(e=>{const d=Math.floor(e[0]/10)*10;(by[d]=by[d]||[]).push(e)});
   const decs=Object.keys(by).map(Number).sort((a,b)=>a-b);
   tl.innerHTML=decs.length?decs.map(d=>`<section class="decade" id="d${d}"><div class="dhead"><h2>${d}s</h2><p>${DEC[d]||""}</p></div><ol class="line">${by[d].map(entryHTML).join("")}</ol></section>`).join(""):`<p class="empty">No Ferrari matches that search. Try a model name like “Daytona” or an engine like “V12”.</p>`;
   decNav.innerHTML=decs.map(d=>`<button class="dec" data-d="${d}">${d}s</button>`).join("")+`<span class="count">${list.length} of ${D.length} models</span>`;
   spy();
 };
-document.querySelectorAll(".chip").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.f===filt));b.addEventListener("click",()=>{filt=b.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));try{localStorage.setItem("ft-filter",filt)}catch(e){}render();});});
+document.querySelectorAll(".chip:not(.srt)").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.f===filt));b.addEventListener("click",()=>{filt=b.dataset.f;document.querySelectorAll(".chip:not(.srt)").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));try{localStorage.setItem("ft-filter",filt)}catch(e){}render();});});
 q.addEventListener("input",render);
+document.querySelectorAll(".srt").forEach(b=>b.addEventListener("click",()=>{sortBy=b.dataset.s;document.querySelectorAll(".srt").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();window.scrollTo({top:document.querySelector("main").offsetTop-document.querySelector(".bar").offsetHeight,behavior:"auto"})}));
 decNav.addEventListener("click",ev=>{const b=ev.target.closest(".dec");if(!b)return;const el=document.getElementById("d"+b.dataset.d);if(el){const off=document.querySelector(".bar").offsetHeight+8;window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-off,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}});
 function spy(){const off=document.querySelector(".bar").offsetHeight+40;let cur=null;document.querySelectorAll("section.decade").forEach(s=>{if(s.getBoundingClientRect().top-off<=0)cur=s.id.slice(1)});if(!cur){const f=document.querySelector("section.decade");cur=f&&f.id.slice(1)}decNav.querySelectorAll(".dec").forEach(b=>b.classList.toggle("on",b.dataset.d===cur));}
 window.addEventListener("scroll",spy,{passive:true});
-document.getElementById("lede").innerHTML=`<b>${D.length} models</b> from the 1947 125 S to the 2026 electric Luce, in the order each was introduced, with key specs and a photo of each car.`;
+document.getElementById("lede").innerHTML=`<b>${D.length} models</b> from the 1947 125 S to the 2026 electric Luce, in the order each was introduced, with key specs, a photo and current market value for each car.`;
 // ----- Photos: each model's Wikipedia lead image, bundled with the page -----
 function photosReady(){document.querySelectorAll(".stage img").forEach(im=>{const st=im.parentElement;const ok=()=>st.classList.add("photo");if(im.complete&&im.naturalWidth)ok();else{im.addEventListener("load",ok,{once:true});im.addEventListener("error",()=>{st.classList.remove("photo");im.remove()},{once:true})}})}
 const _render=render;render=function(){_render();photosReady()};
 render();
+fetch("values.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.values){VAL=j.values;ASOF=j.asOf;render()}}).catch(()=>{});
 try{if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").then(()=>{document.getElementById("pwa-note").textContent="Works offline once loaded. Use Add to Home Screen to install it as an app."}).catch(()=>{})}}catch(e){}
 </script>
 

@@ -1,0 +1,657 @@
+{
+"asOf": "2026-11-26",
+"values": {
+"125 S": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Never sold publicly; survivors are held by Ferrari and private collections."
+},
+"166 Inter": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Rarely sold publicly; too few recent sales for a market value.",
+"label": "Too few sales to value"
+},
+"166 MM": {
+"v": 2664354,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/166/"
+},
+"195 Inter": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Rarely sold publicly; too few recent sales for a market value.",
+"label": "Too few sales to value"
+},
+"212 Inter": {
+"v": 1043079,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/212/"
+},
+"340 America": {
+"v": 3858333,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/america/"
+},
+"375 America": {
+"v": 6335500,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/america/"
+},
+"250 Europa GT": {
+"v": 1434621,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"410 Superamerica": {
+"v": 5656250,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/america/"
+},
+"250 GT 'Tour de France'": {
+"v": 4592022,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"250 GT California Spider": {
+"v": 7526104,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/",
+"lo": 7526104,
+"hi": 17000561,
+"note": "LWB about $7.5M; SWB about $17M."
+},
+"250 Testa Rossa": {
+"v": 16400000,
+"kind": "sale",
+"src": "Gooding & Co., Pebble Beach 2011",
+"url": "https://money.cnn.com/2011/08/21/autos/ferrari_world_record_price/index.htm",
+"note": "Last widely reported public sale; values today are likely higher."
+},
+"250 GT Coupé Pinin Farina": {
+"v": 494027,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"250 GT SWB Berlinetta": {
+"v": 8211668,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"250 GT/E 2+2": {
+"v": 372239,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"400 Superamerica": {
+"v": 3282656,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/america/"
+},
+"250 GTO": {
+"v": 41801250,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/gto/",
+"note": "Last public sale $38.5M (Jan 2026)."
+},
+"250 GT Lusso": {
+"v": 1531701,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/250/"
+},
+"275 GTB": {
+"v": 2428357,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/275/"
+},
+"330 GT 2+2": {
+"v": 307215,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/330/",
+"lo": 196774,
+"hi": 307215,
+"note": "Series I about $197K; Series II about $307K."
+},
+"500 Superfast": {
+"v": 1785059,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/america/"
+},
+"275 GTB/4": {
+"v": 3431938,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/275/"
+},
+"330 GTC": {
+"v": 548670,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/330/"
+},
+"365 California": {
+"v": 4250000,
+"kind": "est",
+"src": "RM Sotheby's Miami 2024 estimate",
+"url": "https://rmsothebys.com/auctions/mi24/lots/r0135-1967-ferrari-365-california-spyder-by-pininfarina/",
+"lo": 4000000,
+"hi": 4500000,
+"note": "Estimate $4.0M–$4.5M; the car did not sell."
+},
+"Dino 206 GT": {
+"v": 697730,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/dino/"
+},
+"330 P4": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Never sold publicly; only four were built."
+},
+"365 GTB/4 'Daytona'": {
+"v": 662362,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/daytona/365-gtb4/"
+},
+"365 GT 2+2": {
+"v": 187586,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/365/"
+},
+"Dino 246 GT/GTS": {
+"v": 382334,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/dino/",
+"lo": 382334,
+"hi": 543958,
+"note": "GT about $382K; GTS about $544K."
+},
+"365 GTC/4": {
+"v": 196329,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/365/"
+},
+"365 GT4 2+2": {
+"v": 82471,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/365-gt4-22-400-412/"
+},
+"365 GT4 BB": {
+"v": 353286,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/berlinetta-boxer/"
+},
+"Dino 308 GT4": {
+"v": 71479,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/dino/"
+},
+"308 GTB/GTS": {
+"v": 78426,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/308/",
+"lo": 74845,
+"hi": 160246,
+"note": "Early fibreglass GTB about $160K."
+},
+"512 BB": {
+"v": 256238,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/berlinetta-boxer/"
+},
+"400 GT": {
+"v": 36929,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/365-gt4-22-400-412/",
+"lo": 36929,
+"hi": 136000,
+"note": "Automatic about $37K; manual about $136K."
+},
+"Mondial 8": {
+"v": 33626,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/mondial/"
+},
+"512 BBi": {
+"v": 271603,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/berlinetta-boxer/"
+},
+"208 GTB Turbo": {
+"v": 83694,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"288 GTO": {
+"v": 3872124,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"Testarossa": {
+"v": 150201,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"328 GTB/GTS": {
+"v": 136132,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/328/",
+"lo": 102943,
+"hi": 136132,
+"note": "GTS about $103K."
+},
+"412": {
+"v": 63900,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/365-gt4-22-400-412/",
+"lo": 63900,
+"hi": 102529,
+"note": "Manual about $103K."
+},
+"F40": {
+"v": 2581748,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f40/"
+},
+"348 tb/ts": {
+"v": 72719,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/348/"
+},
+"Mondial t": {
+"v": 60273,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/mondial/"
+},
+"512 TR": {
+"v": 274594,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/512-tr/"
+},
+"456 GT": {
+"v": 82551,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/456/"
+},
+"F355": {
+"v": 138660,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f355/",
+"lo": 89963,
+"hi": 138660,
+"note": "Manual Berlinetta; F1-gearbox cars about $90K."
+},
+"F512 M": {
+"v": 471837,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"F50": {
+"v": 4641537,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"550 Maranello": {
+"v": 165818,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/550/"
+},
+"360 Modena": {
+"v": 113552,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/360/",
+"lo": 75435,
+"hi": 113552,
+"note": "Manual; F1-gearbox cars about $75K."
+},
+"550 Barchetta Pininfarina": {
+"v": 498214,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/550/"
+},
+"575M Maranello": {
+"v": 219868,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/575m/",
+"lo": 112735,
+"hi": 219868,
+"note": "Manual; F1-gearbox cars about $113K."
+},
+"Enzo": {
+"v": 3500116,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"360 Challenge Stradale": {
+"v": 242482,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/360/"
+},
+"612 Scaglietti": {
+"v": 83790,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/612-scaglietti/",
+"lo": 83790,
+"hi": 239683,
+"note": "Rare manual cars about $240K."
+},
+"F430": {
+"v": 142000,
+"kind": "sale",
+"src": "CLASSIC.COM recent US sale",
+"url": "https://www.classic.com/m/ferrari/f430/coupe/f1/",
+"note": "F1 Berlinetta, Oct 2025."
+},
+"Superamerica": {
+"v": 315432,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/575m/",
+"lo": 315432,
+"hi": 646464,
+"note": "Manual cars about $646K."
+},
+"FXX": {
+"v": 5056046,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/fxx/"
+},
+"599 GTB Fiorano": {
+"v": 136641,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/599/"
+},
+"430 Scuderia": {
+"v": 326235,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f430/"
+},
+"California": {
+"v": 97575,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/california/"
+},
+"Scuderia Spider 16M": {
+"v": 631672,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f430/"
+},
+"458 Italia": {
+"v": 184359,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/458/"
+},
+"599 GTO": {
+"v": 902752,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/599/"
+},
+"SA Aperta": {
+"v": 1263494,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/599/"
+},
+"FF": {
+"v": 116220,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"F12berlinetta": {
+"v": 215571,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f12/"
+},
+"LaFerrari": {
+"v": 3606908,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/laferrari/"
+},
+"458 Speciale": {
+"v": 485244,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/458/"
+},
+"California T": {
+"v": 124458,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/california/"
+},
+"Sergio": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Six built, all for invited clients; none sold publicly."
+},
+"F60America": {
+"v": 3635000,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f12/"
+},
+"488 GTB": {
+"v": 218548,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/488/"
+},
+"F12tdf": {
+"v": 1085647,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f12/"
+},
+"GTC4Lusso": {
+"v": 221030,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/gtc4lusso/"
+},
+"LaFerrari Aperta": {
+"v": 5360000,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/laferrari/"
+},
+"J50": {
+"v": null,
+"kind": "none",
+"src": "",
+"note": "Ten built for Japanese clients; none sold publicly."
+},
+"812 Superfast": {
+"v": 319686,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/812/"
+},
+"Portofino": {
+"v": 179337,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/portofino/"
+},
+"488 Pista": {
+"v": 462070,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/488/"
+},
+"Monza SP1 / SP2": {
+"v": 2623377,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/testarossa/"
+},
+"F8 Tributo": {
+"v": 335141,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/f8/"
+},
+"SF90 Stradale": {
+"v": 494887,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/sf90/"
+},
+"Roma": {
+"v": 210355,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/roma/"
+},
+"812 GTS": {
+"v": 532963,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/812/"
+},
+"296 GTB": {
+"v": 349569,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/296/"
+},
+"812 Competizione": {
+"v": 1603156,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/812/"
+},
+"Daytona SP3": {
+"v": 18540000,
+"kind": "sale",
+"src": "Broad Arrow, Las Vegas 2026",
+"url": "https://www.autoevolution.com/news/someone-paid-23-million-for-a-ferrari-daytona-sp3-drove-80-miles-sold-for-185-million-277922.html",
+"note": "Original price about $2.25M. A one-off 'Tailor Made' car sold for $26M for charity in 2025."
+},
+"Purosangue": {
+"v": 594000,
+"kind": "est",
+"src": "CLASSIC.COM asking prices",
+"url": "https://www.classic.com/m/ferrari/purosangue/",
+"lo": 528999,
+"hi": 659000,
+"note": "Dealer asking prices; no settled sales yet."
+},
+"Roma Spider": {
+"v": 302000,
+"kind": "market",
+"src": "CLASSIC.COM market benchmark",
+"url": "https://www.classic.com/m/ferrari/roma/"
+},
+"SF90 XX Stradale": {
+"v": 890000,
+"kind": "new",
+"src": "Price when new (Supercars.net)",
+"url": "https://www.supercars.net/blog/all-brands/ferrari/current-ferrari-models/"
+},
+"12Cilindri": {
+"v": 484825,
+"kind": "sale",
+"src": "CLASSIC.COM recent sale",
+"url": "https://www.classic.com/m/ferrari/12cilindri/"
+},
+"F80": {
+"v": 3900000,
+"kind": "new",
+"src": "Price when new (Fox Business)",
+"url": "https://www.foxbusiness.com/lifestyle/ferrari-unveils-new-supercar-f80"
+},
+"296 Speciale": {
+"v": 504000,
+"kind": "new",
+"src": "New-car prices (CarGurus)",
+"url": "https://www.cargurus.com/research/2026-Ferrari-296-Speciale-c34096",
+"lo": 470364,
+"hi": 537524
+},
+"Amalfi": {
+"v": 300000,
+"kind": "new",
+"src": "Expected US price (Motor1)",
+"url": "https://www.motor1.com/news/764434/2026-ferrari-amalfi/",
+"note": "Approximate; official US pricing not published."
+},
+"849 Testarossa": {
+"v": 540000,
+"kind": "new",
+"src": "European price, converted (Fox Business)",
+"url": "https://foxbusiness.com/lifestyle/ferrari-brings-back-legendary-testarossa-name-1050-horsepower-plug-in-hybrid-beast",
+"note": "€460,000 in Europe; US price expected to be higher."
+},
+"Luce": {
+"v": 560800,
+"kind": "new",
+"src": "US price (The Weekly Driver)",
+"url": "https://theweeklydriver.com/2026/10/ferrari-luce-us-price-560800/"
+}
+}
+}
