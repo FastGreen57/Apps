@@ -379,7 +379,7 @@ function photosReady(){document.querySelectorAll(".stage img").forEach(im=>{cons
 const _render=render;render=function(){_render();photosReady()};
 render();
 fetch("values.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.values){VAL=j.values;ASOF=j.asOf;render()}}).catch(()=>{});
-try{if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").then(()=>{document.getElementById("pwa-note").textContent="Works offline once loaded. Use Add to Home Screen to install it as an app."}).catch(()=>{})}}catch(e){}
+try{if("serviceWorker" in navigator&&location.protocol==="https:"){const had=!!navigator.serviceWorker.controller;let reloaded=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!reloaded){reloaded=true;location.reload()}});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{document.getElementById("pwa-note").textContent="Works offline once loaded. Use Add to Home Screen to install it as an app.";reg.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")reg.update()})}).catch(()=>{})}}catch(e){}
 </script>
 
 </body></html>

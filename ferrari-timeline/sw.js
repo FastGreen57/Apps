@@ -1,4 +1,4 @@
-const V="ferrari-timeline-v6";const ASSETS=["./","index.html","values.json","manifest.webmanifest","icon-192.png","icon-512.png","apple-touch-icon.png"];
+const V="ferrari-timeline-v7";const ASSETS=["./","index.html","values.json","manifest.webmanifest","icon-192.png","icon-512.png","apple-touch-icon.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))));self.clients.claim()});
 const netFirst=req=>fetch(req).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(req,cp))}return res}).catch(()=>caches.match(req,{ignoreSearch:true}));
