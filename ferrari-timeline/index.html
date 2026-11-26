@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ferrari Timeline</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#C8102E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ferrari Timeline">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single chronological spine, sticky decade bar, one card per model (illustration + spec strip) */
+:root{
+  --bg:#F1F2F4; --surface:#FFFFFF; --stage:#E4E6EA; --ink:#16181D; --muted:#5D6370; --line:#D6D9DF;
+  --rosso:#C8102E; --giallo:#E8B400; --carline:rgba(0,0,0,.18); --shadow:rgba(20,24,30,.22);
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111317; --surface:#191C21; --stage:#23272E; --ink:#ECEDF0; --muted:#9BA1AC; --line:#2D3139;
+  --rosso:#F0303F; --giallo:#F2C200; --carline:rgba(255,255,255,.22); --shadow:rgba(0,0,0,.55); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111317; --surface:#191C21; --stage:#23272E; --ink:#ECEDF0; --muted:#9BA1AC; --line:#2D3139;
+  --rosso:#F0303F; --giallo:#F2C200; --carline:rgba(255,255,255,.22); --shadow:rgba(0,0,0,.55); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.hero{padding-block:40px 20px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(56px,13vw,132px);line-height:.86;margin:8px 0 14px;letter-spacing:-.01em;text-wrap:balance}
+h1 .arrow{color:var(--rosso)}
+.lede{max-width:62ch;color:var(--muted);margin:0}
+.lede b{color:var(--ink);font-weight:600}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding-block:10px}
+.search{flex:1 1 220px;min-width:0;display:flex}
+.search input{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+.search input:focus-visible{outline:2px solid var(--rosso);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 13px var(--f-body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible,.dec:focus-visible,a:focus-visible{outline:2px solid var(--rosso);outline-offset:2px}
+.decades{display:flex;gap:2px;overflow-x:auto;width:100%;scrollbar-width:none}
+.decades::-webkit-scrollbar{display:none}
+.dec{font:600 15px var(--f-display);letter-spacing:.04em;color:var(--muted);background:none;border:0;padding:4px 8px;cursor:pointer;white-space:nowrap;border-radius:4px}
+.dec:hover{color:var(--ink)}
+.dec.on{color:var(--rosso)}
+.count{font-family:var(--f-data);font-size:12px;color:var(--muted);margin-left:auto}
+
+main{padding-block:8px 64px}
+section.decade{position:relative}
+.dhead{display:flex;align-items:baseline;gap:14px;padding-block:36px 10px}
+.dhead h2{font-family:var(--f-display);font-weight:800;font-size:56px;line-height:1;margin:0;color:var(--rosso)}
+.dhead p{margin:0;color:var(--muted);font-size:14px;max-width:56ch}
+
+ol.line{list-style:none;margin:0;padding:0;position:relative}
+ol.line::before{content:"";position:absolute;left:38px;top:0;bottom:0;width:2px;background:var(--line)}
+.entry{display:grid;grid-template-columns:78px minmax(0,1fr);gap:0 14px;padding-block:12px}
+.yr{position:relative;text-align:right;padding-right:12px}
+.yr span{display:inline-block;position:relative;z-index:1;background:var(--bg);font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;padding:6px 0 4px;font-variant-numeric:tabular-nums}
+.yr::after{content:"";position:absolute;left:33px;top:42px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--rosso)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr)}
+@media (min-width:760px){.card{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}}
+.stage{position:relative;background:var(--stage);display:flex;align-items:center;justify-content:center;padding:10px 8px 4px;min-height:140px;aspect-ratio:16/10;max-width:100%;overflow:hidden}
+.stage.photo{padding:0}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease}
+.stage.photo img{opacity:1}
+.stage.photo svg{visibility:hidden}
+.credit{position:absolute;right:6px;bottom:6px;font:500 10.5px var(--f-data);color:#fff;background:rgba(0,0,0,.55);padding:2px 6px;border-radius:3px;text-decoration:none;opacity:0}
+.stage.photo .credit{opacity:1}
+.stage svg{width:100%;max-width:100%;height:auto;display:block}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.title{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.title h3{margin:0;font-size:20px;line-height:1.2;font-weight:600;text-wrap:balance}
+.tag{font:500 11px var(--f-data);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--muted)}
+.tag.race{border-color:var(--rosso);color:var(--rosso)}
+.tag.ltd{border-color:var(--giallo);color:var(--ink);background:color-mix(in srgb,var(--giallo) 22%,transparent)}
+.specs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.spec{padding:8px 8px 8px 0;min-width:0}
+.spec+.spec{padding-left:10px;border-left:1px solid var(--line)}
+.spec dt{font:500 10.5px var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.spec dd{margin:2px 0 0;font:500 14px var(--f-data);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.spec dd small{display:block;color:var(--muted);font-size:11px}
+@media (max-width:520px){.specs{grid-template-columns:repeat(2,minmax(0,1fr))}.spec:nth-child(3){border-left:0;padding-left:0}.spec:nth-child(n+3){border-top:1px solid var(--line)}}
+.desc{margin:0;max-width:62ch}
+.more{font-size:13px;color:var(--muted)}
+.more a{color:var(--rosso);text-decoration:none;font-weight:600}
+.more a:hover{text-decoration:underline}
+.empty{padding:60px 0;text-align:center;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-block:20px 40px;color:var(--muted);font-size:13px}
+footer p{max-width:72ch;margin:0 0 8px}
+@media (max-width:520px){
+  .chips{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none}.chip{white-space:nowrap}
+  .bar .wrap{gap:8px}
+  ol.line::before{left:24px}
+  .entry{grid-template-columns:50px minmax(0,1fr);gap:0 10px}
+  .yr{padding-right:4px}.yr span{font-size:19px}
+  .yr::after{left:19px}
+  .dhead h2{font-size:44px}
+}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .2s ease}.card:hover{transform:translateY(-2px)}}
+</style>
+
+</head><body>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Maranello road cars &amp; landmark racers</div>
+  <h1>1947 <span class="arrow">→</span> 2026</h1>
+  <p class="lede" id="lede">Every Ferrari model line from the 125 S to the electric Luce, in the order it was introduced.</p>
+</div></header>
+
+<div class="bar"><div class="wrap">
+  <label class="search" for="q"><input id="q" type="search" placeholder="Search a model, engine or year — e.g. GTO, V6, 1984" aria-label="Search models"></label>
+  <div class="chips" role="group" aria-label="Engine">
+    <button class="chip" data-f="all" aria-pressed="true">All</button>
+    <button class="chip" data-f="V12" aria-pressed="false">V12</button>
+    <button class="chip" data-f="V8" aria-pressed="false">V8</button>
+    <button class="chip" data-f="V6" aria-pressed="false">V6</button>
+    <button class="chip" data-f="F12" aria-pressed="false">Flat-12</button>
+    <button class="chip" data-f="hyb" aria-pressed="false">Hybrid / EV</button>
+  </div>
+  <nav class="decades" id="decades" aria-label="Jump to decade"></nav>
+</div></div>
+
+<main><div class="wrap" id="tl"></div></main>
+
+<footer><div class="wrap">
+  <p>Figures are manufacturer claims or widely cited period numbers and are rounded; production counts include closely related variants (Spider/GTS versions are folded into their coupé). Photos are the lead image from each model's Wikipedia article, mostly from Wikimedia Commons; tap a photo's credit for the photographer and licence. The 365 GT4 BB shows a side-profile illustration because no photo of that exact model was available.</p>
+  <p id="pwa-note"></p>
+</div></footer>
+
+<script>
+// [year, name, engine, hp, topKmh, built, body, colour, desc, flags]
+// flags: o=open top, w=rear wing, r=race car, l=limited series
+const C={r:"#C8102E",rs:"#8E1B1B",g:"#EDBB00",s:"#B9BDC3",n:"#1D1F23",b:"#24426B",w:"#ECECEA",v:"#2F4E3B",gr:"#6B7079",bz:"#7A6A55",az:"#5E8FB8"};
+const D=[
+[1947,"125 S","1.5 L V12",118,210,2,"proto","r","The first car to wear the Ferrari name. Gioacchino Colombo's tiny V12 set the template for decades, and it won in Rome just weeks after its debut.","or"],
+[1948,"166 Inter","2.0 V12",110,170,38,"gt50s","bz","Ferrari's first true road car, sold with coachwork by Touring, Ghia and others. Built for gentlemen who also wanted to race on Sundays.",""],
+[1948,"166 MM","2.0 V12",140,220,47,"barchetta","r","Touring's 'barchetta' (little boat) body made this the car of the moment. It won the 1949 Mille Miglia and Le Mans, Ferrari's first Le Mans win.","or"],
+[1950,"195 Inter","2.3 V12",130,180,27,"gt50s","s","A bigger-bored 166 for the road, mostly bodied by Vignale and Ghia. Each car was close to a one-off.",""],
+[1951,"212 Inter","2.6 V12",150,200,80,"gt50s","b","The first Ferrari built in meaningful numbers, and the first to wear Pinin Farina coachwork, beginning a partnership that lasted over 60 years.",""],
+[1951,"340 America","4.1 V12",220,240,23,"gt50s","rs","Aurelio Lampredi's big 'long-block' V12 aimed squarely at wealthy American buyers. Also raced, winning the 1951 Mille Miglia.","l"],
+[1953,"375 America","4.5 V12",300,250,12,"gt50s","w","A 4.5-litre grand tourer with Pinin Farina and Vignale bodies; one of the fastest road cars of its day.","l"],
+[1954,"250 Europa GT","3.0 V12",220,230,35,"gt50s","s","The first road car with the Colombo 3.0-litre V12 that would define the legendary 250 family.",""],
+[1956,"410 Superamerica","5.0 V12",340,260,35,"gt60s","b","A bespoke flagship for kings and industrialists. Its 5-litre V12 made it among the most powerful cars on sale.","l"],
+[1956,"250 GT 'Tour de France'","3.0 V12",260,250,77,"gt60s","az","Named for its sweep of the Tour de France Automobile. A dual-purpose berlinetta you could drive to the track and win.",""],
+[1957,"250 GT California Spider","3.0 V12",280,250,106,"gt60s","r","Built at the request of US dealers for open-top California motoring. Among the most valuable cars ever sold at auction.","o"],
+[1957,"250 Testa Rossa","3.0 V12",300,270,34,"barchetta","r","Named for its red cam covers. Its pontoon-fendered body is one of the great racing shapes; it won Le Mans four times.","or"],
+[1958,"250 GT Coupé Pinin Farina","3.0 V12",240,230,353,"coupe2p2","gr","The first Ferrari built on a real production line, giving the company the steady income to fund racing.",""],
+[1959,"250 GT SWB Berlinetta","3.0 V12",280,268,176,"gt60s","r","A 20 cm shorter wheelbase sharpened the handling. Perhaps the purest road-and-race Ferrari ever made.",""],
+[1960,"250 GT/E 2+2","3.0 V12",240,230,955,"coupe2p2","b","Ferrari's first series-built four-seater, and its best-selling model to that point.",""],
+[1960,"400 Superamerica","4.0 V12",340,265,47,"gt60s","n","A low, aerodynamic 'Aerodinamico' coupé built for a handful of very wealthy clients.","l"],
+[1962,"250 GTO","3.0 V12",300,280,36,"gt60s","r","Built to homologate for GT racing, it won three world championships. The most valuable car model in the world.","rl"],
+[1962,"250 GT Lusso","3.0 V12",250,240,350,"gt60s","s","The last of the 250 GTs and one of the most elegant. Steve McQueen owned one.",""],
+[1964,"275 GTB","3.3 V12",280,250,450,"gt60s","r","The first Ferrari road car with independent rear suspension and a rear-mounted gearbox (transaxle).",""],
+[1964,"330 GT 2+2","4.0 V12",300,245,1100,"coupe2p2","s","A refined four-seater for long-distance touring, with a 4-litre V12 and a five-speed gearbox.",""],
+[1964,"500 Superfast","5.0 V12",400,280,36,"gt60s","n","A 400 hp hand-built coupé for royalty and film stars. The Shah of Iran owned two.","l"],
+[1966,"275 GTB/4","3.3 V12",300,268,330,"gt60s","g","The first Ferrari road car with a four-cam V12, and the first with dry-sump lubrication.",""],
+[1966,"330 GTC","4.0 V12",300,240,600,"gt60s","az","A quiet, well-mannered two-seat GT that many owners consider the best all-round 1960s Ferrari.",""],
+[1966,"365 California","4.4 V12",320,245,14,"gt60s","w","A rare luxury convertible with pop-up driving lights in the nose.","ol"],
+[1967,"Dino 206 GT","2.0 V6",180,235,152,"wedge60","g","Ferrari's first mid-engined road car, named after Enzo's late son Alfredino. Sold as a Dino, not a Ferrari.",""],
+[1967,"330 P4","4.0 V12",450,320,4,"proto","r","The car that finished 1-2-3 at Daytona in 1967, Ferrari's answer to Ford's GT40.","rl"],
+[1968,"365 GTB/4 'Daytona'","4.4 V12",352,280,1406,"gt60s","r","Its unofficial nickname celebrates the Daytona win. The fastest production car of its time, with a sharp-nosed Fioravanti body.",""],
+[1968,"365 GT 2+2","4.4 V12",320,245,801,"coupe2p2","s","The 'Queen Mother': a big, comfortable four-seater with power steering and self-levelling suspension.",""],
+[1969,"Dino 246 GT/GTS","2.4 V6",195,240,3569,"wedge60","r","The steel-bodied, larger-engined Dino. Widely held as one of the most beautiful cars ever built.",""],
+[1971,"365 GTC/4","4.4 V12",320,260,500,"gt70s","s","A softer, more practical sister to the Daytona, with a slim 2+2 cabin.",""],
+[1972,"365 GT4 2+2","4.4 V12",320,245,521,"coupe2p2","b","A crisp, wedge-era four-seater that evolved into the 400 and 412 and lasted until 1989.",""],
+[1973,"365 GT4 BB","4.4 Flat-12",380,302,387,"wedge","r","The 'Berlinetta Boxer': Ferrari's first mid-engined 12-cylinder road car, built to answer the Lamborghini Countach.",""],
+[1973,"Dino 308 GT4","3.0 V8",255,250,2826,"wedge","g","Ferrari's first production V8 road car, and its only Bertone-designed production model.",""],
+[1975,"308 GTB/GTS","3.0 V8",255,252,12000,"wedge","r","Pininfarina's curvy V8 two-seater, made famous by 'Magnum, P.I.' The first versions had fibreglass bodies.",""],
+[1976,"512 BB","4.9 Flat-12",360,302,929,"wedge","rs","The Boxer grows to five litres for more torque, with a chin spoiler and a two-tone body.",""],
+[1976,"400 GT","4.8 V12",340,245,1810,"coupe2p2","s","The first Ferrari offered with an automatic gearbox, a three-speed GM unit.",""],
+[1980,"Mondial 8","3.0 V8",214,230,703,"wedge4","r","A mid-engined four-seater. Later versions added Ferrari's only mid-engined cabriolet.",""],
+[1981,"512 BBi","4.9 Flat-12",340,280,1007,"wedge","n","Fuel injection replaces carburettors, making the Boxer cleaner and smoother.",""],
+[1982,"208 GTB Turbo","2.0 Turbo V8",220,242,437,"wedge","r","A tax-dodging 2-litre for Italy, and Ferrari's first turbocharged road car.",""],
+[1984,"288 GTO","2.9 Twin-turbo V8",400,305,272,"wedge","r","Built for the cancelled Group B racing series. The first of Ferrari's line of supercars that leads to the F80.","l"],
+[1984,"Testarossa","4.9 Flat-12",390,290,7177,"wedge","r","Side strakes, a wide rear and pop-up lights made it the poster car of the 1980s. 'Miami Vice' did the rest.",""],
+[1985,"328 GTB/GTS","3.2 V8",270,263,7412,"wedge","r","The final, best-sorted evolution of the 308 line.",""],
+[1985,"412","4.9 V12",340,255,576,"coupe2p2","s","The final evolution of the 365 GT4 2+2 design, and the first Ferrari with anti-lock brakes.",""],
+[1987,"F40","2.9 Twin-turbo V8",478,324,1311,"wedge","r","The last car Enzo Ferrari personally approved. Raw, light and turbocharged, and the first road car past 200 mph.","wl"],
+[1989,"348 tb/ts","3.4 V8",300,275,8844,"wedge","r","A Testarossa-styled V8 with the engine mounted lengthwise and a transverse gearbox, hence the 't'.",""],
+[1989,"Mondial t","3.4 V8",300,255,1882,"wedge4","r","The re-engineered Mondial, sharing the 348's longitudinal V8.",""],
+[1992,"512 TR","4.9 Flat-12",428,314,2261,"wedge","r","A heavily revised Testarossa with sharper handling and more power.",""],
+[1992,"456 GT","5.5 V12",436,302,3289,"gtmod","b","A front-engined V12 four-seater, the start of Ferrari's modern grand tourer line.",""],
+[1994,"F355","3.5 V8",375,295,11273,"mid","r","Five valves per cylinder and an 8,500 rpm redline. Introduced the F1-style paddle-shift gearbox in 1997.",""],
+[1994,"F512 M","4.9 Flat-12",440,315,501,"wedge","r","The final flat-12 berlinetta, with fixed headlamps under glass.","l"],
+[1995,"F50","4.7 V12",513,325,349,"hyper","r","Essentially a road-going Formula 1 car, with an engine derived from Ferrari's 1990 F1 car bolted directly to the carbon tub.","owl"],
+[1996,"550 Maranello","5.5 V12",478,320,3083,"gtmod","s","The return of the front-engined V12 berlinetta, 23 years after the Daytona.",""],
+[1999,"360 Modena","3.6 V8",395,295,16365,"mid","g","An aluminium chassis and a glass engine cover. Ferrari's best-seller of its time.",""],
+[2000,"550 Barchetta Pininfarina","5.5 V12",478,300,448,"gtmod","r","A topless 550 celebrating Pininfarina's 70th anniversary, with only a soft temporary roof.","ol"],
+[2002,"575M Maranello","5.7 V12",508,325,2056,"gtmod","s","An updated 550 with more power and an optional F1 paddle-shift gearbox.",""],
+[2002,"Enzo","6.0 V12",651,350,400,"hyper","r","Named for the founder and built with F1 technology. Offered only to Ferrari's most loyal clients.","l"],
+[2003,"360 Challenge Stradale","3.6 V8",425,300,1288,"mid","r","A lighter, track-focused 360 with carbon brakes, ancestor of the Scuderia and Pista.",""],
+[2004,"612 Scaglietti","5.7 V12",532,320,3025,"gtmod","b","A large aluminium four-seater named for coachbuilder Sergio Scaglietti.",""],
+[2004,"F430","4.3 V8",483,315,15000,"mid","r","Introduced the steering-wheel 'manettino' drive-mode switch and an electronic rear differential.",""],
+[2005,"Superamerica","5.7 V12",532,320,559,"gtmod","n","A 575M with an electrochromic glass roof that rotates 180° to open.","l"],
+[2005,"FXX","6.3 V12",789,345,30,"hyper","r","A track-only Enzo for clients who joined Ferrari's development programme. Not road legal.","rwl"],
+[2006,"599 GTB Fiorano","6.0 V12",611,330,3600,"gtmod","r","Enzo-derived V12 power and flying-buttress rear pillars in a front-engined GT.",""],
+[2007,"430 Scuderia","4.3 V8",503,320,null,"mid","s","A lighter, sharper F430 developed with Michael Schumacher.",""],
+[2008,"California","4.3 V8",453,310,10000,"gtmod","r","Ferrari's first front-engined V8, first folding hardtop and first dual-clutch gearbox.","o"],
+[2008,"Scuderia Spider 16M","4.3 V8",503,315,499,"mid","r","Built to celebrate Ferrari's 16th F1 constructors' title.","ol"],
+[2009,"458 Italia","4.5 V8",562,325,15000,"mid","r","A 9,000 rpm naturally aspirated V8 that many consider the high point of Ferrari's mid-engined cars.",""],
+[2010,"599 GTO","6.0 V12",661,335,599,"gtmod","r","A road version of the 599XX track car, briefly Ferrari's fastest road car.","l"],
+[2010,"SA Aperta","6.0 V12",661,325,80,"gtmod","s","An open-top 599 celebrating Sergio and Andrea Pininfarina.","ol"],
+[2011,"FF","6.3 V12",651,335,2300,"shoot","gr","Ferrari's first four-wheel-drive car, in a shooting-brake body with four seats and a real boot.",""],
+[2012,"F12berlinetta","6.3 V12",730,340,null,"gtmod","r","A front-engined V12 with an 'aero bridge' that channels air through the bonnet.",""],
+[2013,"LaFerrari","6.3 V12 Hybrid",950,350,499,"hyper","r","Ferrari's first hybrid road car, pairing a V12 with an F1-style electric motor.","l"],
+[2013,"458 Speciale","4.5 V8",597,325,null,"mid","g","The ultimate naturally aspirated mid-engined V8 Ferrari, with active aerodynamics.",""],
+[2014,"California T","3.9 Twin-turbo V8",553,316,null,"gtmod","s","The return of turbocharging to Ferrari road cars, 25 years after the F40.","o"],
+[2014,"Sergio","4.5 V8",597,320,6,"mid","w","A windscreen-less speedster honouring Sergio Pininfarina.","ol"],
+[2014,"F60America","6.3 V12",731,340,10,"gtmod","r","An open F12 marking 60 years of Ferrari in North America.","ol"],
+[2015,"488 GTB","3.9 Twin-turbo V8",661,330,null,"mid","r","The first turbo mid-engined V8 since the F40. Its engine won International Engine of the Year four times.",""],
+[2015,"F12tdf","6.3 V12",769,340,799,"gtmod","r","A hardcore F12 named after the 1950s Tour de France race, with rear-wheel steering.","l"],
+[2016,"GTC4Lusso","6.3 V12",680,335,null,"shoot","b","The FF's successor, adding four-wheel steering to its four-wheel drive.",""],
+[2016,"LaFerrari Aperta","6.3 V12 Hybrid",950,350,210,"hyper","r","An open LaFerrari for Ferrari's 70th anniversary.","ol"],
+[2016,"J50","3.9 Twin-turbo V8",680,320,10,"mid","w","A targa built for Japan, celebrating 50 years of Ferrari there.","l"],
+[2017,"812 Superfast","6.5 V12",789,340,null,"gtmod","r","When launched, the most powerful naturally aspirated production car ever sold.",""],
+[2017,"Portofino","3.9 Twin-turbo V8",591,320,null,"gtmod","w","Replaced the California T as the entry-level convertible GT.","o"],
+[2018,"488 Pista","3.9 Twin-turbo V8",710,340,null,"mid","r","Track-car technology for the road, with the most powerful V8 in Ferrari history at the time.",""],
+[2018,"Monza SP1 / SP2","6.5 V12",799,300,499,"gtmod","r","Windscreen-less single and twin-seat speedsters, the first of the 'Icona' series.","ol"],
+[2019,"F8 Tributo","3.9 Twin-turbo V8",710,340,null,"mid","r","A tribute to the V8 that won International Engine of the Year four times.",""],
+[2019,"SF90 Stradale","4.0 Twin-turbo V8 PHEV",986,340,null,"hyper","r","Ferrari's first plug-in hybrid series car, with three electric motors and all-wheel drive.",""],
+[2019,"Roma","3.9 Twin-turbo V8",612,320,null,"gtmod","s","A clean-lined 2+2 coupé inspired by 1960s Italian 'dolce vita' style.",""],
+[2020,"812 GTS","6.5 V12",789,340,null,"gtmod","r","The first front-engined V12 convertible in Ferrari's series production since the 365 GTS/4 of 1969.","o"],
+[2021,"296 GTB","3.0 Twin-turbo V6 PHEV",819,330,null,"mid","r","A V6 returns to Ferrari road cars for the first time since the Dino, now with a plug-in hybrid system.",""],
+[2021,"812 Competizione","6.5 V12",819,340,999,"gtmod","gr","A lighter, more powerful 812 with a 9,500 rpm redline.","l"],
+[2021,"Daytona SP3","6.5 V12",829,340,599,"hyper","r","An Icona-series targa inspired by the 1967 Daytona 1-2-3 sports prototypes.","l"],
+[2022,"Purosangue","6.5 V12",715,310,null,"suv","r","Ferrari's first four-door, four-seater, with rear-hinged back doors and a naturally aspirated V12.",""],
+[2023,"Roma Spider","3.9 Twin-turbo V8",612,320,null,"gtmod","az","The first front-engined Ferrari with a fabric roof since the 365 GTS/4 of 1969.","o"],
+[2023,"SF90 XX Stradale","4.0 Twin-turbo V8 PHEV",1016,320,799,"hyper","r","A road-legal version of Ferrari's XX track-car programme, with a fixed rear wing.","wl"],
+[2024,"12Cilindri","6.5 V12",819,340,null,"gtmod","g","A front-engined V12 with a nose inspired by the 1968 Daytona.",""],
+[2024,"F80","3.0 Twin-turbo V6 Hybrid",1184,350,799,"hyper","r","The successor to the 288 GTO, F40, F50, Enzo and LaFerrari, with technology from Ferrari's Le Mans-winning 499P.","wl"],
+[2025,"296 Speciale","3.0 Twin-turbo V6 PHEV",880,330,null,"mid","g","A lighter, more track-focused 296.",""],
+[2025,"Amalfi","3.9 Twin-turbo V8",631,320,null,"gtmod","s","The Roma's successor, with physical buttons back on the steering wheel.",""],
+[2025,"849 Testarossa","4.0 Twin-turbo V8 PHEV",1036,330,null,"hyper","r","Replaces the SF90 and revives one of Ferrari's most famous names.",""],
+[2026,"Luce","Quad-motor electric",1035,null,null,"sedan","b","Ferrari's first fully electric car: a five-seat, four-door model with interior design co-created with Jony Ive's LoveFrom. About 330 miles of range.",""]
+];
+
+const OVR={"340 America":"Ferrari 340 America","375 America":"Ferrari 375 America","250 Europa GT":"Ferrari 250 Europa GT","410 Superamerica":"Ferrari 410 Superamerica","250 GT 'Tour de France'":"Ferrari 250 GT Berlinetta Tour de France","250 GT Coupé Pinin Farina":"Ferrari 250 GT Coupé Pinin Farina","400 Superamerica":"Ferrari 400 Superamerica","365 GT4 BB":"Ferrari Berlinetta Boxer","512 BB":"Ferrari 512 BB","512 BBi":"Ferrari 512 BBi","365 GTB/4 'Daytona'":"Ferrari Daytona","Dino 246 GT/GTS":"Dino 246 GT","400 GT":"Ferrari 400 GT","Superamerica":"Ferrari Superamerica 575","430 Scuderia":"Ferrari 430 Scuderia","Scuderia Spider 16M":"Ferrari Scuderia Spider 16M","SA Aperta":"Ferrari SA Aperta","Monza SP1 / SP2":"Ferrari Monza SP1","Luce":"Ferrari Luce electric","FXX":"Ferrari FXX","412":"Ferrari 412","F512 M":"Ferrari F512 M","Mondial t":"Ferrari Mondial t","Mondial 8":"Ferrari Mondial"};
+const P=/*PHOTOS*/{"125 S":{"f":"photos/125-s.jpg","u":"https://upload.wikimedia.org/wikipedia/commons/d/d0/1947-05-11_Piacenza_Ferrari_125_01C_Cortese.jpg","file":"https://commons.wikimedia.org/wiki/File:1947-05-11_Piacenza_Ferrari_125_01C_Cortese.jpg"},"166 Inter":{"f":"photos/166-inter.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Ferrari_166-Inter-Berlinetta_Front-view_%28cropped%29.JPG/960px-Ferrari_166-Inter-Berlinetta_Front-view_%28cropped%29.JPG","file":"https://commons.wikimedia.org/wiki/File:Ferrari_166-Inter-Berlinetta_Front-view_%28cropped%29.JPG"},"166 MM":{"f":"photos/166-mm.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Ferrari_166_MM_Barchetta.jpg/960px-Ferrari_166_MM_Barchetta.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_166_MM_Barchetta.jpg"},"195 Inter":{"f":"photos/195-inter.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/1951_Ferrari_195_Inter_Ghia%2C_ex-Villoresi%2C_front_left.jpg/960px-1951_Ferrari_195_Inter_Ghia%2C_ex-Villoresi%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:1951_Ferrari_195_Inter_Ghia%2C_ex-Villoresi%2C_front_left.jpg"},"212 Inter":{"f":"photos/212-inter.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Pebble_Tour_Ferrari_Ferrari_212_0092.jpg/960px-2021_Pebble_Tour_Ferrari_Ferrari_212_0092.jpg","file":"https://commons.wikimedia.org/wiki/File:2021_Pebble_Tour_Ferrari_Ferrari_212_0092.jpg"},"340 America":{"f":"photos/340-america.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Ferrari_340_America_Spyder_Vignale_at_Mille_Miglia_2012.jpg/960px-Ferrari_340_America_Spyder_Vignale_at_Mille_Miglia_2012.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_340_America_Spyder_Vignale_at_Mille_Miglia_2012.jpg"},"375 America":{"f":"photos/375-america.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/1954_Ferrari_375_America_Vignale_Cabriolet.jpg/960px-1954_Ferrari_375_America_Vignale_Cabriolet.jpg","file":"https://commons.wikimedia.org/wiki/File:1954_Ferrari_375_America_Vignale_Cabriolet.jpg"},"250 Europa GT":{"f":"photos/250-europa-gt.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Ferrari_250-Europa_Front-view.JPG/960px-Ferrari_250-Europa_Front-view.JPG","file":"https://commons.wikimedia.org/wiki/File:Ferrari_250-Europa_Front-view.JPG"},"410 Superamerica":{"f":"photos/410-superamerica.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/1959_Ferrari_410_Superamerica_-_white_-_fvl.jpg/960px-1959_Ferrari_410_Superamerica_-_white_-_fvl.jpg","file":"https://commons.wikimedia.org/wiki/File:1959_Ferrari_410_Superamerica_-_white_-_fvl.jpg"},"250 GT 'Tour de France'":{"f":"photos/250-gt-tour-de-france.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Ferrari_250_GT_LWB_Berlinetta_Scaglietti_TdF_-_%22PV_96%22_-_1997_GOODWOOD_FESTIVAL_OF_SPEED_%2815660232918%29.jpg/960px-Ferrari_250_GT_LWB_Berlinetta_Scaglietti_TdF_-_%22PV_96%22_-_1997_GOODWOOD_FESTIVAL_OF_SPEED_%2815660232918%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_250_GT_LWB_Berlinetta_Scaglietti_TdF_-_%22PV_96%22_-_1997_GOODWOOD_FESTIVAL_OF_SPEED_%2815660232918%29.jpg"},"250 GT California Spider":{"f":"photos/250-gt-california-spider.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Ferrari_250_California_Spyder_SWB.jpg/960px-Ferrari_250_California_Spyder_SWB.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_250_California_Spyder_SWB.jpg"},"250 Testa Rossa":{"f":"photos/250-testa-rossa.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/1961_Ferrari_250_TR_61_Spyder_Fantuzzi_34_left_2.jpg/960px-1961_Ferrari_250_TR_61_Spyder_Fantuzzi_34_left_2.jpg","file":"https://commons.wikimedia.org/wiki/File:1961_Ferrari_250_TR_61_Spyder_Fantuzzi_34_left_2.jpg"},"250 GT Coupé Pinin Farina":{"f":"photos/250-gt-coup-pinin-farina.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/1959_Ferrari_250_GT_Pinin_Farina_Coup%C3%A9_%281433GT%29%2C_front_left.jpg/960px-1959_Ferrari_250_GT_Pinin_Farina_Coup%C3%A9_%281433GT%29%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:1959_Ferrari_250_GT_Pinin_Farina_Coup%C3%A9_%281433GT%29%2C_front_left.jpg"},"250 GT SWB Berlinetta":{"f":"photos/250-gt-swb-berlinetta.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/23NTBC_16_-_Ferrari.jpg/960px-23NTBC_16_-_Ferrari.jpg","file":"https://commons.wikimedia.org/wiki/File:23NTBC_16_-_Ferrari.jpg"},"250 GT/E 2+2":{"f":"photos/250-gt-e-2-2.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/1962_Ferrari_250_GTE.jpg/960px-1962_Ferrari_250_GTE.jpg","file":"https://commons.wikimedia.org/wiki/File:1962_Ferrari_250_GTE.jpg"},"400 Superamerica":{"f":"photos/400-superamerica.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/1963_Ferrari_400_Superamerica_Series_II_LWB_-_maroon_-_fvl_4.jpg/960px-1963_Ferrari_400_Superamerica_Series_II_LWB_-_maroon_-_fvl_4.jpg","file":"https://commons.wikimedia.org/wiki/File:1963_Ferrari_400_Superamerica_Series_II_LWB_-_maroon_-_fvl_4.jpg"},"250 GTO":{"f":"photos/250-gto.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/1962_Ferrari_250_GTO_SP25.jpg/960px-1962_Ferrari_250_GTO_SP25.jpg","file":"https://commons.wikimedia.org/wiki/File:1962_Ferrari_250_GTO_SP25.jpg"},"250 GT Lusso":{"f":"photos/250-gt-lusso.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Ferrari_250_Lusso_in_Grey%2C_front_right.jpg/960px-Ferrari_250_Lusso_in_Grey%2C_front_right.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_250_Lusso_in_Grey%2C_front_right.jpg"},"275 GTB":{"f":"photos/275-gtb.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/1966_Ferrari_275_GTB_sn_08549%2C_front_left_%28Greenwich_2019%29.jpg/960px-1966_Ferrari_275_GTB_sn_08549%2C_front_left_%28Greenwich_2019%29.jpg","file":"https://commons.wikimedia.org/wiki/File:1966_Ferrari_275_GTB_sn_08549%2C_front_left_%28Greenwich_2019%29.jpg"},"330 GT 2+2":{"f":"photos/330-gt-2-2.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/1966_Ferrari_330_GT_2%2B2_Series_II_Classic-Gala_2025_DSC_0913_%28cropped%29.jpg/960px-1966_Ferrari_330_GT_2%2B2_Series_II_Classic-Gala_2025_DSC_0913_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:1966_Ferrari_330_GT_2%2B2_Series_II_Classic-Gala_2025_DSC_0913_%28cropped%29.jpg"},"500 Superfast":{"f":"photos/500-superfast.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Ferrari_500_Superfast_%2866128%29.jpg/960px-Ferrari_500_Superfast_%2866128%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_500_Superfast_%2866128%29.jpg"},"275 GTB/4":{"f":"photos/275-gtb-4.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/1967_Ferrari_275_GTB_4_in_Blu_Scuro%2C_front_right_%28Greenwich_2022%29.jpg/960px-1967_Ferrari_275_GTB_4_in_Blu_Scuro%2C_front_right_%28Greenwich_2022%29.jpg","file":"https://commons.wikimedia.org/wiki/File:1967_Ferrari_275_GTB_4_in_Blu_Scuro%2C_front_right_%28Greenwich_2022%29.jpg"},"330 GTC":{"f":"photos/330-gtc.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Saxony_Classic_Rallye_2010_-_Ferrari_330_GTC_1967_%28aka%29.jpg/960px-Saxony_Classic_Rallye_2010_-_Ferrari_330_GTC_1967_%28aka%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Saxony_Classic_Rallye_2010_-_Ferrari_330_GTC_1967_%28aka%29.jpg"},"365 California":{"f":"photos/365-california.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/1966_Ferrari_365_California_Spyder_-_brown_-_rvl.jpg/960px-1966_Ferrari_365_California_Spyder_-_brown_-_rvl.jpg","file":"https://commons.wikimedia.org/wiki/File:1966_Ferrari_365_California_Spyder_-_brown_-_rvl.jpg"},"Dino 206 GT":{"f":"photos/dino-206-gt.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Dino_206_GT_%2815406731344%29.jpg/960px-Dino_206_GT_%2815406731344%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Dino_206_GT_%2815406731344%29.jpg"},"330 P4":{"f":"photos/330-p4.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Ferrari_330_P4_1967.jpg/960px-Ferrari_330_P4_1967.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_330_P4_1967.jpg"},"365 GTB/4 'Daytona'":{"f":"photos/365-gtb-4-daytona.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/1973_Ferrari_Daytona_365_GTB4_Blue_LC22.jpg/960px-1973_Ferrari_Daytona_365_GTB4_Blue_LC22.jpg","file":"https://commons.wikimedia.org/wiki/File:1973_Ferrari_Daytona_365_GTB4_Blue_LC22.jpg"},"365 GT 2+2":{"f":"photos/365-gt-2-2.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/1970_Ferrari_365_GT_BS_O24.jpg/960px-1970_Ferrari_365_GT_BS_O24.jpg","file":"https://commons.wikimedia.org/wiki/File:1970_Ferrari_365_GT_BS_O24.jpg"},"Dino 246 GT/GTS":{"f":"photos/dino-246-gt-gts.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Dino_246_GT_%2824627987921%29.jpg/960px-Dino_246_GT_%2824627987921%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Dino_246_GT_%2824627987921%29.jpg"},"365 GTC/4":{"f":"photos/365-gtc-4.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/1972_Ferrari_365_GTC-4_in_Blu_Sera%2C_front_left.jpg/960px-1972_Ferrari_365_GTC-4_in_Blu_Sera%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:1972_Ferrari_365_GTC-4_in_Blu_Sera%2C_front_left.jpg"},"365 GT4 2+2":{"f":"photos/365-gt4-2-2.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Ferrari_365_GT4_2%2B2_%282565525915%29.jpg/960px-Ferrari_365_GT4_2%2B2_%282565525915%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_365_GT4_2%2B2_%282565525915%29.jpg"},"Dino 308 GT4":{"f":"photos/dino-308-gt4.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/1975_Dino_308_GT4_in_Marrone_Metallizzato%2C_Berlin.jpg/960px-1975_Dino_308_GT4_in_Marrone_Metallizzato%2C_Berlin.jpg","file":"https://commons.wikimedia.org/wiki/File:1975_Dino_308_GT4_in_Marrone_Metallizzato%2C_Berlin.jpg"},"308 GTB/GTS":{"f":"photos/308-gtb-gts.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Ferrari_308_GTB_IMG_3510.jpg/960px-Ferrari_308_GTB_IMG_3510.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_308_GTB_IMG_3510.jpg"},"512 BB":{"f":"photos/512-bb.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/1979_Ferrari_512_BB_in_Rosso_Chiaro%2C_front_left_%28Greenwich_2025%29.jpg/960px-1979_Ferrari_512_BB_in_Rosso_Chiaro%2C_front_left_%28Greenwich_2025%29.jpg","file":"https://commons.wikimedia.org/wiki/File:1979_Ferrari_512_BB_in_Rosso_Chiaro%2C_front_left_%28Greenwich_2025%29.jpg"},"400 GT":{"f":"photos/400-gt.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Ferrari_400_automatic.JPG/960px-Ferrari_400_automatic.JPG","file":"https://commons.wikimedia.org/wiki/File:Ferrari_400_automatic.JPG"},"Mondial 8":{"f":"photos/mondial-8.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/PUW456Y_Ferrari_Mondial.jpg/960px-PUW456Y_Ferrari_Mondial.jpg","file":"https://commons.wikimedia.org/wiki/File:PUW456Y_Ferrari_Mondial.jpg"},"512 BBi":{"f":"photos/512-bbi.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/1983_Ferrari_512_BBi_%283736540247%29.jpg/960px-1983_Ferrari_512_BBi_%283736540247%29.jpg","file":"https://commons.wikimedia.org/wiki/File:1983_Ferrari_512_BBi_%283736540247%29.jpg"},"208 GTB Turbo":{"f":"photos/208-gtb-turbo.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Paris_-_Bonhams_2017_-_Ferrari_208_GTB_-_1981_-_002_%28cropped%29.jpg/960px-Paris_-_Bonhams_2017_-_Ferrari_208_GTB_-_1981_-_002_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Paris_-_Bonhams_2017_-_Ferrari_208_GTB_-_1981_-_002_%28cropped%29.jpg"},"288 GTO":{"f":"photos/288-gto.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Ferrari_288_GTO_%281%29.JPG/960px-Ferrari_288_GTO_%281%29.JPG","file":"https://commons.wikimedia.org/wiki/File:Ferrari_288_GTO_%281%29.JPG"},"Testarossa":{"f":"photos/testarossa.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Ferrari_Testarossa_IMG_3043.jpg/960px-Ferrari_Testarossa_IMG_3043.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Testarossa_IMG_3043.jpg"},"328 GTB/GTS":{"f":"photos/328-gtb-gts.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Ferrari_328_GTS_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg/960px-Ferrari_328_GTS_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_328_GTS_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg"},"412":{"f":"photos/412.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Ferrari_412%2C_TC_24%2C_Essen_%28TCE42741-RR%29.jpg/960px-Ferrari_412%2C_TC_24%2C_Essen_%28TCE42741-RR%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_412%2C_TC_24%2C_Essen_%28TCE42741-RR%29.jpg"},"F40":{"f":"photos/f40.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/F40_Ferrari_20090509.jpg/960px-F40_Ferrari_20090509.jpg","file":"https://commons.wikimedia.org/wiki/File:F40_Ferrari_20090509.jpg"},"348 tb/ts":{"f":"photos/348-tb-ts.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/1992_Ferrari_348.jpg/960px-1992_Ferrari_348.jpg","file":"https://commons.wikimedia.org/wiki/File:1992_Ferrari_348.jpg"},"Mondial t":{"f":"photos/mondial-t.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/1990_Ferrari_Mondial_t_Cabriolet_in_Blu_Chiaro%2C_front_left.jpg/960px-1990_Ferrari_Mondial_t_Cabriolet_in_Blu_Chiaro%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:1990_Ferrari_Mondial_t_Cabriolet_in_Blu_Chiaro%2C_front_left.jpg"},"512 TR":{"f":"photos/512-tr.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Ferrari_512_TR_-_003.jpg/960px-Ferrari_512_TR_-_003.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_512_TR_-_003.jpg"},"456 GT":{"f":"photos/456-gt.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Paris_-_Bonhams_2014_-_Ferrari_456GT_modoficata_coup%C3%A9_-_2003_-_001.jpg/960px-Paris_-_Bonhams_2014_-_Ferrari_456GT_modoficata_coup%C3%A9_-_2003_-_001.jpg","file":"https://commons.wikimedia.org/wiki/File:Paris_-_Bonhams_2014_-_Ferrari_456GT_modoficata_coup%C3%A9_-_2003_-_001.jpg"},"F355":{"f":"photos/f355.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Ferrari_F355_Berlinetta_1X7A7333.jpg/960px-Ferrari_F355_Berlinetta_1X7A7333.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F355_Berlinetta_1X7A7333.jpg"},"F512 M":{"f":"photos/f512-m.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/1995_Ferrari_F512_M_in_Rosso_Corsa%2C_front_right.jpg/960px-1995_Ferrari_F512_M_in_Rosso_Corsa%2C_front_right.jpg","file":"https://commons.wikimedia.org/wiki/File:1995_Ferrari_F512_M_in_Rosso_Corsa%2C_front_right.jpg"},"F50":{"f":"photos/f50.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/1999_Ferrari_F50.jpg/960px-1999_Ferrari_F50.jpg","file":"https://commons.wikimedia.org/wiki/File:1999_Ferrari_F50.jpg"},"550 Maranello":{"f":"photos/550-maranello.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Paris_-_Bonhams_2016_-_Ferrari_550_Maranello_coup%C3%A9_-_1999_-_005.jpg/960px-Paris_-_Bonhams_2016_-_Ferrari_550_Maranello_coup%C3%A9_-_1999_-_005.jpg","file":"https://commons.wikimedia.org/wiki/File:Paris_-_Bonhams_2016_-_Ferrari_550_Maranello_coup%C3%A9_-_1999_-_005.jpg"},"360 Modena":{"f":"photos/360-modena.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Ferrari_360_Modena_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2826%29_%28cropped%29.jpg/960px-Ferrari_360_Modena_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2826%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_360_Modena_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2826%29_%28cropped%29.jpg"},"550 Barchetta Pininfarina":{"f":"photos/550-barchetta-pininfarina.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/2001_Ferrari_550_Barchetta_no_135%2C_front_right_side.jpg/960px-2001_Ferrari_550_Barchetta_no_135%2C_front_right_side.jpg","file":"https://commons.wikimedia.org/wiki/File:2001_Ferrari_550_Barchetta_no_135%2C_front_right_side.jpg"},"575M Maranello":{"f":"photos/575m-maranello.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Ferrari575M.jpg/960px-Ferrari575M.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari575M.jpg"},"Enzo":{"f":"photos/enzo.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Orange_Enzo_Ferrari_%287191948164%29.jpg/960px-Orange_Enzo_Ferrari_%287191948164%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Orange_Enzo_Ferrari_%287191948164%29.jpg"},"360 Challenge Stradale":{"f":"photos/360-challenge-stradale.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Ferrari_360_Challenge_%2818964877690%29.jpg/960px-Ferrari_360_Challenge_%2818964877690%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_360_Challenge_%2818964877690%29.jpg"},"612 Scaglietti":{"f":"photos/612-scaglietti.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Ferrari_612_Scaglietti_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2816%29_%28cropped%29.jpg/960px-Ferrari_612_Scaglietti_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2816%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_612_Scaglietti_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2816%29_%28cropped%29.jpg"},"F430":{"f":"photos/f430.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Ferrari_F430_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg/960px-Ferrari_F430_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F430_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg"},"Superamerica":{"f":"photos/superamerica.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Paris_-_Bonhams_2016_-_Ferrari_575_Superamerica_-_2005_-_001.jpg/960px-Paris_-_Bonhams_2016_-_Ferrari_575_Superamerica_-_2005_-_001.jpg","file":"https://commons.wikimedia.org/wiki/File:Paris_-_Bonhams_2016_-_Ferrari_575_Superamerica_-_2005_-_001.jpg"},"FXX":{"f":"photos/fxx.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Ferrari_FXX_No.31_%2818649132729%29.jpg/960px-Ferrari_FXX_No.31_%2818649132729%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_FXX_No.31_%2818649132729%29.jpg"},"599 GTB Fiorano":{"f":"photos/599-gtb-fiorano.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/2009_Ferrari_599_GTB_Fiorano_F1%2C_Rosso_Fiorano_-_front_right.jpg/960px-2009_Ferrari_599_GTB_Fiorano_F1%2C_Rosso_Fiorano_-_front_right.jpg","file":"https://commons.wikimedia.org/wiki/File:2009_Ferrari_599_GTB_Fiorano_F1%2C_Rosso_Fiorano_-_front_right.jpg"},"430 Scuderia":{"f":"photos/430-scuderia.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Ferrari_F430_Scuderia_1X7A7332.jpg/960px-Ferrari_F430_Scuderia_1X7A7332.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F430_Scuderia_1X7A7332.jpg"},"California":{"f":"photos/california.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/2013_Ferrari_California_4.3L_Hagerty_parking_lot_6.1.19.jpg/960px-2013_Ferrari_California_4.3L_Hagerty_parking_lot_6.1.19.jpg","file":"https://commons.wikimedia.org/wiki/File:2013_Ferrari_California_4.3L_Hagerty_parking_lot_6.1.19.jpg"},"Scuderia Spider 16M":{"f":"photos/scuderia-spider-16m.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/2009_Ferrari_F430_Spider_16M.jpg/960px-2009_Ferrari_F430_Spider_16M.jpg","file":"https://commons.wikimedia.org/wiki/File:2009_Ferrari_F430_Spider_16M.jpg"},"458 Italia":{"f":"photos/458-italia.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Ferrari_458_Fort_Worth_June_2016_56_%28Ferrari%29_%28cropped-2%29.jpg/960px-Ferrari_458_Fort_Worth_June_2016_56_%28Ferrari%29_%28cropped-2%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_458_Fort_Worth_June_2016_56_%28Ferrari%29_%28cropped-2%29.jpg"},"599 GTO":{"f":"photos/599-gto.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Ferrari_599_GTO_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2812%29_%28cropped%29.jpg/960px-Ferrari_599_GTO_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2812%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_599_GTO_-_Flickr_-_Alexandre_Pr%C3%A9vot_%2812%29_%28cropped%29.jpg"},"SA Aperta":{"f":"photos/sa-aperta.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Ferarri_Ferrari_599_SA_Aperta_%286736006081%29.jpg/960px-Ferarri_Ferrari_599_SA_Aperta_%286736006081%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferarri_Ferrari_599_SA_Aperta_%286736006081%29.jpg"},"FF":{"f":"photos/ff.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/2013_Ferrari_FF%2C_Blu_TdF%2C_front_left.jpg/960px-2013_Ferrari_FF%2C_Blu_TdF%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:2013_Ferrari_FF%2C_Blu_TdF%2C_front_left.jpg"},"F12berlinetta":{"f":"photos/f12berlinetta.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Ferrari_F12berlinetta_IMG_2941.jpg/960px-Ferrari_F12berlinetta_IMG_2941.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F12berlinetta_IMG_2941.jpg"},"LaFerrari":{"f":"photos/laferrari.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/LaFerrari_in_Beverly_Hills_%2814563979888%29.jpg/960px-LaFerrari_in_Beverly_Hills_%2814563979888%29.jpg","file":"https://commons.wikimedia.org/wiki/File:LaFerrari_in_Beverly_Hills_%2814563979888%29.jpg"},"458 Speciale":{"f":"photos/458-speciale.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Ferrari_458_Speciale_%2815848932487%29_%28cropped%29.jpg/960px-Ferrari_458_Speciale_%2815848932487%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_458_Speciale_%2815848932487%29_%28cropped%29.jpg"},"California T":{"f":"photos/california-t.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Ferrari_California_T_-_Mondial_de_l%27Automobile_de_Paris_2014_-_003.jpg/960px-Ferrari_California_T_-_Mondial_de_l%27Automobile_de_Paris_2014_-_003.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_California_T_-_Mondial_de_l%27Automobile_de_Paris_2014_-_003.jpg"},"Sergio":{"f":"photos/sergio.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Ferrari_Sergio%2C_GIMS_2015_%28Ank_Kumar%2C_Infosys_Ltd%29_07.jpg/960px-Ferrari_Sergio%2C_GIMS_2015_%28Ank_Kumar%2C_Infosys_Ltd%29_07.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Sergio%2C_GIMS_2015_%28Ank_Kumar%2C_Infosys_Ltd%29_07.jpg"},"F60America":{"f":"photos/f60america.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Ferrari_F60_America_-_Museo_Ferrari_%2817514670344%29.jpg/960px-Ferrari_F60_America_-_Museo_Ferrari_%2817514670344%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F60_America_-_Museo_Ferrari_%2817514670344%29.jpg"},"488 GTB":{"f":"photos/488-gtb.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/2018_Ferrari_488_GTB_Spider_S-A_3.9_Front.jpg/960px-2018_Ferrari_488_GTB_Spider_S-A_3.9_Front.jpg","file":"https://commons.wikimedia.org/wiki/File:2018_Ferrari_488_GTB_Spider_S-A_3.9_Front.jpg"},"F12tdf":{"f":"photos/f12tdf.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Ferrari_F12_TDF_at_the_2016_Ferrari_Finali_Mondiali.jpg/960px-Ferrari_F12_TDF_at_the_2016_Ferrari_Finali_Mondiali.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_F12_TDF_at_the_2016_Ferrari_Finali_Mondiali.jpg"},"GTC4Lusso":{"f":"photos/gtc4lusso.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Ferrari_GTC4Lusso_IMG_4353.jpg/960px-Ferrari_GTC4Lusso_IMG_4353.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_GTC4Lusso_IMG_4353.jpg"},"LaFerrari Aperta":{"f":"photos/laferrari-aperta.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Ferrari_LaFerrari_Aperta_%2829989480538%29.jpg/960px-Ferrari_LaFerrari_Aperta_%2829989480538%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_LaFerrari_Aperta_%2829989480538%29.jpg"},"J50":{"f":"photos/j50.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/J50_at_London_Design_Museum_2018.jpg/960px-J50_at_London_Design_Museum_2018.jpg","file":"https://commons.wikimedia.org/wiki/File:J50_at_London_Design_Museum_2018.jpg"},"812 Superfast":{"f":"photos/812-superfast.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/2019_Ferrari_812_Superfast_S-A_6.5.jpg/960px-2019_Ferrari_812_Superfast_S-A_6.5.jpg","file":"https://commons.wikimedia.org/wiki/File:2019_Ferrari_812_Superfast_S-A_6.5.jpg"},"Portofino":{"f":"photos/portofino.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Ferrari_Portofino_M_IMG_4351.jpg/960px-Ferrari_Portofino_M_IMG_4351.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Portofino_M_IMG_4351.jpg"},"488 Pista":{"f":"photos/488-pista.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Ferrari_488_Pista_MYLE_Festival_2025_DSC_9444.jpg/960px-Ferrari_488_Pista_MYLE_Festival_2025_DSC_9444.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_488_Pista_MYLE_Festival_2025_DSC_9444.jpg"},"Monza SP1 / SP2":{"f":"photos/monza-sp1-sp2.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Festival_automobile_international_2019_-_Ferrari_Monza_SP1_-_005_%28cropped%29.jpg/960px-Festival_automobile_international_2019_-_Ferrari_Monza_SP1_-_005_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Festival_automobile_international_2019_-_Ferrari_Monza_SP1_-_005_%28cropped%29.jpg"},"F8 Tributo":{"f":"photos/f8-tributo.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/2020_Ferrari_F8_Tributo_3.9.jpg/960px-2020_Ferrari_F8_Tributo_3.9.jpg","file":"https://commons.wikimedia.org/wiki/File:2020_Ferrari_F8_Tributo_3.9.jpg"},"SF90 Stradale":{"f":"photos/sf90-stradale.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg/960px-Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg"},"Roma":{"f":"photos/roma.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/2021_Ferrari_Roma_in_Rosso_Fiorano%2C_front_right.jpg/960px-2021_Ferrari_Roma_in_Rosso_Fiorano%2C_front_right.jpg","file":"https://commons.wikimedia.org/wiki/File:2021_Ferrari_Roma_in_Rosso_Fiorano%2C_front_right.jpg"},"812 GTS":{"f":"photos/812-gts.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Ferrari_812_GTS_in_Kuala_Lumpur%2C_Malaysia.jpg/960px-Ferrari_812_GTS_in_Kuala_Lumpur%2C_Malaysia.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_812_GTS_in_Kuala_Lumpur%2C_Malaysia.jpg"},"296 GTB":{"f":"photos/296-gtb.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/2022_Ferrari_296_%28cropped%29.jpg/960px-2022_Ferrari_296_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:2022_Ferrari_296_%28cropped%29.jpg"},"812 Competizione":{"f":"photos/812-competizione.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Ferrari_812_Competizione_side.png/960px-Ferrari_812_Competizione_side.png","file":"https://commons.wikimedia.org/wiki/File:Ferrari_812_Competizione_side.png"},"Daytona SP3":{"f":"photos/daytona-sp3.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Ferrari_Daytona_SP3_front_side_at_CF_2022.jpg/960px-Ferrari_Daytona_SP3_front_side_at_CF_2022.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Daytona_SP3_front_side_at_CF_2022.jpg"},"Purosangue":{"f":"photos/purosangue.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Ferrari_Purosangue_DSC_7008.jpg/960px-Ferrari_Purosangue_DSC_7008.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Purosangue_DSC_7008.jpg"},"Roma Spider":{"f":"photos/roma-spider.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Ferrari_Roma_Spider_Auto_Zuerich_2023_1X7A1493.jpg/960px-Ferrari_Roma_Spider_Auto_Zuerich_2023_1X7A1493.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Roma_Spider_Auto_Zuerich_2023_1X7A1493.jpg"},"SF90 XX Stradale":{"f":"photos/sf90-xx-stradale.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/2024_Ferrari_SF90_XX_Stradale_in_Bianco_Artico%2C_front_left.jpg/960px-2024_Ferrari_SF90_XX_Stradale_in_Bianco_Artico%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:2024_Ferrari_SF90_XX_Stradale_in_Bianco_Artico%2C_front_left.jpg"},"12Cilindri":{"f":"photos/12cilindri.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/2025_Ferrari_12Cilindri_in_Rosso_Imola%2C_front_left.jpg/960px-2025_Ferrari_12Cilindri_in_Rosso_Imola%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:2025_Ferrari_12Cilindri_in_Rosso_Imola%2C_front_left.jpg"},"F80":{"f":"photos/f80.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/FerrariF80_%28resized%29_%28cropped%29.jpg/960px-FerrariF80_%28resized%29_%28cropped%29.jpg","file":"https://commons.wikimedia.org/wiki/File:FerrariF80_%28resized%29_%28cropped%29.jpg"},"296 Speciale":{"f":"photos/296-speciale.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Ferrari_296_Speciale_%2855112786260%29.jpg/960px-Ferrari_296_Speciale_%2855112786260%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_296_Speciale_%2855112786260%29.jpg"},"Amalfi":{"f":"photos/amalfi.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Ferrari_Amalfi_%28retouched%29.jpg/960px-Ferrari_Amalfi_%28retouched%29.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_Amalfi_%28retouched%29.jpg"},"849 Testarossa":{"f":"photos/849-testarossa.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Ferrari_849_Testarossa_Auto_Zuerich_2026_IMG_8589.jpg/960px-Ferrari_849_Testarossa_Auto_Zuerich_2026_IMG_8589.jpg","file":"https://commons.wikimedia.org/wiki/File:Ferrari_849_Testarossa_Auto_Zuerich_2026_IMG_8589.jpg"},"Luce":{"f":"photos/luce.jpg","u":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/2027_Ferrari_Luce%2C_front_left.jpg/960px-2027_Ferrari_Luce%2C_front_left.jpg","file":"https://commons.wikimedia.org/wiki/File:2027_Ferrari_Luce%2C_front_left.jpg"}};
+const DEC={1940:"Enzo Ferrari's first cars, built for racing and sold to a handful of clients to fund it.",1950:"Coachbuilt V12s for the wealthy, while the racing cars win across Europe.",1960:"The golden era: 250 GTO, 275 and Daytona. Dino introduces a mid-mounted engine.",1970:"Wedge shapes, flat-12 Boxers and the first V8 road cars.",1980:"Testarossa, turbo V8s and the F40.",1990:"F1 paddle-shift gearboxes and the return of the front-engined V12.",2000:"Enzo, carbon-ceramic brakes and the California.",2010:"Turbos return, hybrids arrive, and the FF brings four-wheel drive.",2020:"Hybrid V6s, the Purosangue, and the first all-electric Ferrari."};
+
+// ----- Illustration generator: side profile, car faces left -----
+const T={
+ barchetta:{p:[[22,94],[19,82],[28,74],[48,68],[70,63],[94,67],[150,68],[176,67],[230,67],[252,62],[274,65],[296,74],[301,94]],win:null,wh:[68,250],r:17,belt:67},
+ proto:{p:[[18,94],[16,84],[28,74],[96,66],[136,63],[160,48],[204,46],[238,57],[298,63],[303,94]],win:[[140,63],[161,51],[200,49],[226,59]],wh:[70,254],r:18,belt:63},
+ gt50s:{p:[[20,94],[17,81],[28,72],[80,68],[134,65],[152,50],[178,42],[214,42],[244,53],[280,64],[298,72],[302,94]],win:[[146,65],[160,52],[180,46],[212,46],[236,56],[240,64]],wh:[70,250],r:17,belt:65},
+ gt60s:{p:[[17,94],[15,83],[24,74],[90,68],[150,64],[172,48],[198,42],[230,45],[264,58],[294,66],[302,74],[302,94]],win:[[160,64],[176,51],[198,46],[228,48],[252,60]],wh:[66,252],r:17,belt:64},
+ gt70s:{p:[[17,94],[15,82],[24,74],[110,68],[150,66],[168,50],[222,48],[248,62],[298,66],[303,94]],win:[[160,65],[173,53],[218,51],[238,63]],wh:[68,254],r:17,belt:66},
+ coupe2p2:{p:[[17,94],[17,79],[30,72],[120,68],[150,66],[166,49],[228,47],[248,62],[300,66],[304,94]],win:[[160,65],[172,52],[224,50],[240,63]],wh:[66,256],r:17,belt:66},
+ wedge60:{p:[[18,94],[16,84],[26,77],[100,68],[128,64],[150,49],[196,47],[230,58],[294,64],[303,72],[303,94]],win:[[136,64],[153,52],[192,50],[216,60]],wh:[70,252],r:17,belt:64},
+ wedge:{p:[[17,93],[17,83],[26,78],[110,67],[130,62],[154,47],[202,45],[228,53],[296,60],[304,68],[304,93]],win:[[134,62],[156,50],[198,48],[216,55]],wh:[70,256],r:18,belt:62},
+ wedge4:{p:[[17,93],[17,83],[26,78],[106,67],[124,62],[146,46],[214,44],[236,54],[296,60],[304,68],[304,93]],win:[[130,62],[149,49],[210,47],[226,55]],wh:[70,256],r:18,belt:62},
+ mid:{p:[[15,93],[15,82],[30,74],[96,66],[124,58],[150,43],[196,39],[238,47],[288,56],[304,64],[306,93]],win:[[130,58],[152,46],[192,42],[222,50]],wh:[70,256],r:19,belt:58},
+ hyper:{p:[[14,93],[14,84],[30,76],[100,66],[126,58],[150,44],[194,40],[236,50],[290,58],[306,64],[307,93]],win:[[132,58],[153,47],[190,43],[220,52]],wh:[70,256],r:19,belt:58},
+ gtmod:{p:[[15,93],[13,80],[26,72],[90,64],[150,58],[172,43],[214,39],[252,49],[290,58],[304,66],[306,93]],win:[[160,58],[176,46],[210,43],[238,52]],wh:[68,258],r:19,belt:58},
+ shoot:{p:[[15,93],[13,80],[26,72],[90,64],[148,58],[172,43],[214,39],[282,42],[300,52],[306,62],[306,93]],win:[[160,58],[176,46],[210,43],[270,45],[286,56]],wh:[68,258],r:19,belt:58},
+ suv:{p:[[15,90],[13,74],[28,64],[96,56],[150,50],[174,34],[220,30],[278,35],[300,47],[306,60],[306,90]],win:[[160,50],[178,37],[218,34],[268,38],[286,50]],wh:[70,256],r:22,belt:50},
+ sedan:{p:[[15,92],[13,78],[28,68],[90,60],[134,52],[168,34],[226,32],[272,42],[298,54],[306,64],[306,92]],win:[[142,52],[171,37],[222,35],[262,44]],wh:[68,256],r:20,belt:52}
+};
+function smooth(pts){ // Catmull-Rom -> cubic Bézier, open curve
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)],t=.18;
+    d+=` C${(p1[0]+(p2[0]-p0[0])*t).toFixed(1)},${(p1[1]+(p2[1]-p0[1])*t).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])*t).toFixed(1)},${(p2[1]-(p3[1]-p1[1])*t).toFixed(1)} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+let uid=0;
+function car(type,col,flags){
+  const t=T[type]||T.mid, id="g"+(uid++), open=flags.includes("o"), wing=flags.includes("w");
+  let pts=t.p.map(p=>p.slice());
+  const winx=t.win?[t.win[0][0],t.win[t.win.length-1][0]]:null;
+  if(open&&t.win){pts=pts.filter(p=>!(p[0]>winx[0]+2&&p[0]<winx[1]+18&&p[1]<t.belt));pts.splice(pts.findIndex(p=>p[0]>winx[0]),0,[winx[0]+30,t.belt+1],[winx[1]-4,t.belt+1]);pts.sort((a,b)=>a[0]-b[0]);}
+  const last=pts[pts.length-1], first=pts[0], gy=Math.max(first[1],last[1]);
+  pts[0]=[first[0]+2,gy-9];pts[pts.length-1]=[last[0]-1,gy-9];
+  const body=smooth(pts)+` Q${last[0]},${gy} ${last[0]-12},${gy} L${first[0]+12},${gy} Q${first[0]},${gy} ${first[0]+2},${gy-9} Z`;
+  const [fx,rx]=t.wh, r=t.r, cy=gy-2;
+  const fill=C[col]||col;
+  let s=`<svg viewBox="0 0 320 112" role="img" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>`;
+  s+=`<ellipse cx="160" cy="${cy+r-1}" rx="150" ry="5" fill="var(--shadow)"/>`;
+  if(wing){const wx=pts.filter(p=>p[0]>250)[0]||[270,60];s+=`<path d="M266,${wx[1]-2} l4,-12 M292,${wx[1]+2} l2,-14" stroke="${fill}" stroke-width="3"/><rect x="258" y="${wx[1]-18}" width="46" height="6" rx="1.5" fill="${fill}" stroke="var(--carline)"/>`;}
+  s+=`<path d="${body}" fill="${fill}" stroke="var(--carline)" stroke-width="1"/><path d="${body}" fill="url(#${id})"/>`;
+  if(t.win){
+    if(open){const w0=t.win[0],w1=t.win[1];s+=`<path d="M${w0[0]+2},${t.belt} L${w1[0]+4},${w1[1]+6} L${w1[0]+9},${w1[1]+6} L${w0[0]+14},${t.belt} Z" fill="#9fb3c4" fill-opacity=".55" stroke="#2a2f36" stroke-width="1"/><path d="M${w0[0]+34},${t.belt} q4,-14 12,-14 q6,0 6,14 Z" fill="#1d1f23" opacity=".85"/>`;}
+    else s+=`<path d="${smooth(t.win)} Z" fill="#20262E" opacity=".88"/><path d="${smooth(t.win.slice(0,3))}" stroke="#9fb3c4" stroke-opacity=".5" stroke-width="2" fill="none"/>`;
+  }
+  s+=`<path d="M${first[0]+14},${t.belt+10} L${last[0]-12},${t.belt+8}" stroke="#fff" stroke-opacity=".25" stroke-width="1.2"/>`;
+  s+=`<ellipse cx="${first[0]+7}" cy="${(first[1]+t.belt)/2+6}" rx="5" ry="3" fill="#F3EED8" opacity=".9"/>`;
+  for(const x of[fx,rx]){
+    s+=`<circle cx="${x}" cy="${cy-2}" r="${r+4}" fill="#000" opacity=".38"/><circle cx="${x}" cy="${cy}" r="${r}" fill="#17181B"/><circle cx="${x}" cy="${cy}" r="${r*.62}" fill="#C9CDD2"/><circle cx="${x}" cy="${cy}" r="${r*.62}" fill="none" stroke="#7E848C" stroke-width="1.2" stroke-dasharray="2 2.6"/><circle cx="${x}" cy="${cy}" r="${r*.18}" fill="#5B6168"/>`;
+  }
+  return s+"</svg>";
+}
+
+// ----- Rendering -----
+const fmt=n=>n==null?"—":n.toLocaleString("en-US");
+const kind=e=>{const s=e[2];return{V12:/V12/.test(s),V8:/V8/.test(s),V6:/V6/.test(s),F12:/Flat-12/.test(s),hyb:/Hybrid|PHEV|electric/i.test(s)}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tl=document.getElementById("tl"), q=document.getElementById("q"), decNav=document.getElementById("decades");
+let filt="all";
+try{const s=localStorage.getItem("ft-filter");if(s)filt=s;}catch(e){}
+
+function entryHTML(e){
+  const [y,name,eng,hp,kmh,built,body,col,desc,fl]=e;
+  const tags=(fl.includes("r")?`<span class="tag race">Race car</span>`:"")+(fl.includes("l")&&!fl.includes("r")?`<span class="tag ltd">Limited series</span>`:"")+(fl.includes("o")?`<span class="tag">Open top</span>`:"");
+  const top=kmh?`${Math.round(kmh*0.6214)} mph<small>${kmh} km/h</small>`:`—<small>not published</small>`;
+  const q2=encodeURIComponent("Ferrari "+name.replace(/'/g,"").replace(/\//g," "));
+  return `<li class="entry"><div class="yr"><span>${y}</span></div>
+  <article class="card"><div class="stage">${car(body,col,fl)}${P[name]?`<img src="${P[name].f||P[name].u}" referrerpolicy="no-referrer" alt="Ferrari ${esc(name)}" loading="lazy" decoding="async"><a class="credit" href="${P[name].file}" target="_blank" rel="noopener">Photo: Wikimedia ↗</a>`:""}</div>
+  <div class="body"><div class="title"><h3>Ferrari ${esc(name)}</h3>${tags}</div>
+  <dl class="specs"><div class="spec"><dt>Engine</dt><dd>${esc(eng)}</dd></div><div class="spec"><dt>Power</dt><dd>${fmt(hp)} hp</dd></div><div class="spec"><dt>Top speed</dt><dd>${top}</dd></div><div class="spec"><dt>Built</dt><dd>${built?fmt(built):"In series"}${built?"":"<small>no fixed run</small>"}</dd></div></dl>
+  <p class="desc">${esc(desc)}</p>
+  <div class="more"><a href="https://www.google.com/search?tbm=isch&q=${q2}" target="_blank" rel="noopener">Photos ↗</a> · <a href="https://en.wikipedia.org/wiki/Special:Search?search=${q2}" target="_blank" rel="noopener">History ↗</a></div>
+  </div></article></li>`;
+}
+
+let render=function(){
+  const term=q.value.trim().toLowerCase();
+  const list=D.filter(e=>(filt==="all"||kind(e)[filt])&&(!term||(`${e[0]} ${e[1]} ${e[2]} ${e[8]}`).toLowerCase().includes(term)));
+  const by={};list.forEach(e=>{const d=Math.floor(e[0]/10)*10;(by[d]=by[d]||[]).push(e)});
+  const decs=Object.keys(by).map(Number).sort((a,b)=>a-b);
+  tl.innerHTML=decs.length?decs.map(d=>`<section class="decade" id="d${d}"><div class="dhead"><h2>${d}s</h2><p>${DEC[d]||""}</p></div><ol class="line">${by[d].map(entryHTML).join("")}</ol></section>`).join(""):`<p class="empty">No Ferrari matches that search. Try a model name like “Daytona” or an engine like “V12”.</p>`;
+  decNav.innerHTML=decs.map(d=>`<button class="dec" data-d="${d}">${d}s</button>`).join("")+`<span class="count">${list.length} of ${D.length} models</span>`;
+  spy();
+};
+document.querySelectorAll(".chip").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.f===filt));b.addEventListener("click",()=>{filt=b.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));try{localStorage.setItem("ft-filter",filt)}catch(e){}render();});});
+q.addEventListener("input",render);
+decNav.addEventListener("click",ev=>{const b=ev.target.closest(".dec");if(!b)return;const el=document.getElementById("d"+b.dataset.d);if(el){const off=document.querySelector(".bar").offsetHeight+8;window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-off,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}});
+function spy(){const off=document.querySelector(".bar").offsetHeight+40;let cur=null;document.querySelectorAll("section.decade").forEach(s=>{if(s.getBoundingClientRect().top-off<=0)cur=s.id.slice(1)});if(!cur){const f=document.querySelector("section.decade");cur=f&&f.id.slice(1)}decNav.querySelectorAll(".dec").forEach(b=>b.classList.toggle("on",b.dataset.d===cur));}
+window.addEventListener("scroll",spy,{passive:true});
+document.getElementById("lede").innerHTML=`<b>${D.length} models</b> from the 1947 125 S to the 2026 electric Luce, in the order each was introduced, with key specs and a photo of each car.`;
+// ----- Photos: each model's Wikipedia lead image, bundled with the page -----
+function photosReady(){document.querySelectorAll(".stage img").forEach(im=>{const st=im.parentElement;const ok=()=>st.classList.add("photo");if(im.complete&&im.naturalWidth)ok();else{im.addEventListener("load",ok,{once:true});im.addEventListener("error",()=>{st.classList.remove("photo");im.remove()},{once:true})}})}
+const _render=render;render=function(){_render();photosReady()};
+render();
+try{if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").then(()=>{document.getElementById("pwa-note").textContent="Works offline once loaded. Use Add to Home Screen to install it as an app."}).catch(()=>{})}}catch(e){}
+</script>
+
+</body></html>
